@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack Pro - Student Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span class="logo-text">EduTrack Pro</span>
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active" data-section="dashboard">
+                        <a href="#"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li data-section="students">
+                        <a href="#"><i class="fa-solid fa-user-graduate"></i> <span>Students</span></a>
+                    </li>
+                    <li data-section="courses">
+                        <a href="#"><i class="fa-solid fa-book-open"></i> <span>Courses</span></a>
+                    </li>
+                    <li data-section="attendance">
+                        <a href="#"><i class="fa-solid fa-calendar-check"></i> <span>Attendance</span></a>
+                    </li>
+                    <li data-section="reports">
+                        <a href="#"><i class="fa-solid fa-chart-line"></i> <span>Reports</span></a>
+                    </li>
+                    <li data-section="settings">
+                        <a href="#"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar" id="sidebarAdminAvatar">AD</div>
+                    <div class="user-details">
+                        <h4 id="sidebarAdminName">Admin User</h4>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="toggle-sidebar-btn" id="toggleSidebarBtn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="page-title-wrap">
+                        <h1 id="currentPageTitle">Dashboard</h1>
+                        <ul class="breadcrumb">
+                            <li><span>Home</span></li>
+                            <li><i class="fa-solid fa-chevron-right"></i></li>
+                            <li class="active"><span id="breadcrumbCurrent">Dashboard</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-box global-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="globalSearchInput" placeholder="Quick search students...">
+                    </div>
+                    
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+
+                    <div class="notification-wrap">
+                        <button class="icon-btn" id="notificationBtn">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                    </div>
+
+                    <div class="admin-profile-menu">
+                        <div class="avatar" id="topbarAdminAvatar">AD</div>
+                        <span class="admin-name" id="topbarAdminName">Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic Body Sections -->
+            <div class="content-body">
+                
+                <!-- SECTION: DASHBOARD -->
+                <section id="dashboardSection" class="app-section active-section">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Students</h3>
+                                <p class="stat-number" id="dashTotalStudents">0</p>
+                                <span class="stat-trend positive"><i class="fa-solid fa-arrow-up"></i> +4.5% from last month</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Active Students</h3>
+                                <p class="stat-number" id="dashActiveStudents">0</p>
+                                <span class="stat-trend positive"><i class="fa-solid fa-circle-check"></i> Currently enrolled</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon bg-orange">
+                                <i class="fa-solid fa-user-minus"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Inactive Students</h3>
+                                <p class="stat-number" id="dashInactiveStudents">0</p>
+                                <span class="stat-trend negative"><i class="fa-solid fa-circle-pause"></i> Paused or Graduated</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon bg-purple">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Courses</h3>
+                                <p class="stat-number" id="dashTotalCourses">0</p>
+                                <span class="stat-trend neutral"><i class="fa-solid fa-layer-group"></i> Active departments</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="charts-grid">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2>Student Enrollment Trends</h2>
+                                <button class="btn btn-sm btn-outline"><i class="fa-solid fa-download"></i> Export</button>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="enrollmentChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2>Course Distribution</h2>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="courseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Admissions & Activities -->
+                    <div class="dashboard-tables-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Recent Admissions</h2>
+                                <button class="btn btn-sm btn-primary" id="dashQuickAddBtn">
+                                    <i class="fa-solid fa-plus"></i> Add Student
+                                </button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Student</th>
+                                                <th>Course</th>
+                                                <th>Enrolled Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentAdmissionsTable">
+                                            <!-- Dynamically generated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Recent Activities</h2>
+                            </div>
+                            <div class="card-body">
+                                <ul class="activity-list" id="recentActivitiesList">
+                                    <li class="activity-item">
+                                        <div class="activity-icon bg-blue-light"><i class="fa-solid fa-user-plus"></i></div>
+                                        <div class="activity-content">
+                                            <p>New student <strong>John Doe</strong> enrolled in Computer Science.</p>
+                                            <span class="activity-time">2 hours ago</span>
+                                        </div>
+                                    </li>
+                                    <li class="activity-item">
+                                        <div class="activity-icon bg-green-light"><i class="fa-solid fa-check-double"></i></div>
+                                        <div class="activity-content">
+                                            <p>Attendance records updated for <strong>Data Science</strong>.</p>
+                                            <span class="activity-time">4 hours ago</span>
+                                        </div>
+                                    </li>
+                                    <li class="activity-item">
+                                        <div class="activity-icon bg-purple-light"><i class="fa-solid fa-pen-to-square"></i></div>
+                                        <div class="activity-content">
+                                            <p>Course details modified for <strong>Electronics</strong>.</p>
+                                            <span class="activity-time">Yesterday</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: STUDENTS -->
+                <section id="studentsSection" class="app-section">
+                    <div class="card">
+                        <div class="card-header flex-between flex-wrap gap-1">
+                            <div>
+                                <h2>Student Directory</h2>
+                                <p class="text-muted">Manage, filter, search, and update all registered student records.</p>
+                            </div>
+                            <button class="btn btn-primary" id="openAddStudentModalBtn">
+                                <i class="fa-solid fa-user-plus"></i> Add New Student
+                            </button>
+                        </div>
+                        
+                        <!-- Filters and Search Bar -->
+                        <div class="filter-bar">
+                            <div class="search-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="studentSearchInput" placeholder="Search by name, ID, email...">
+                            </div>
+
+                            <div class="filter-group">
+                                <select id="courseFilter" class="form-control">
+                                    <option value="ALL">All Courses</option>
+                                    <!-- Dynamic Options -->
+                                </select>
+
+                                <select id="statusFilter" class="form-control">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+
+                                <select id="genderFilter" class="form-control">
+                                    <option value="ALL">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+
+                                <button class="btn btn-outline" id="resetFiltersBtn">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="data-table" id="studentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="sortable" data-sort="id">Student ID <i class="fa-solid fa-sort"></i></th>
+                                            <th class="sortable" data-sort="name">Student Name <i class="fa-solid fa-sort"></i></th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Course</th>
+                                            <th>Gender</th>
+                                            <th class="sortable" data-sort="date">Enrollment Date <i class="fa-solid fa-sort"></i></th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentTableBody">
+                                        <!-- Dynamic student rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div class="empty-state hidden" id="studentsEmptyState">
+                                <i class="fa-solid fa-user-slash"></i>
+                                <h3>No Students Found</h3>
+                                <p>No student records match your active search or filter criteria.</p>
+                            </div>
+                        </div>
+
+                        <!-- Table Footer / Pagination -->
+                        <div class="table-footer flex-between flex-wrap gap-1">
+                            <div class="pagination-info">
+                                Showing <span id="paginationShowing">0-0</span> of <span id="paginationTotal">0</span> entries
+                            </div>
+                            
+                            <div class="pagination-controls">
+                                <label for="rowsPerPageSelect" style="font-size: 0.85rem; color: var(--text-muted);">Per page:</label>
+                                <select id="rowsPerPageSelect" class="form-control-sm mr-2">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <button class="btn btn-sm btn-outline" id="prevPageBtn" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                                <span class="page-number-indicator" id="pageNumberIndicator">Page 1</span>
+                                <button class="btn btn-sm btn-outline" id="nextPageBtn"><i class="fa-solid fa-chevron-right"></i> Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: COURSES -->
+                <section id="coursesSection" class="app-section">
+                    <div class="flex-between flex-wrap gap-1 mb-3">
+                        <div>
+                            <h2>Course Management</h2>
+                            <p class="text-muted">View, add, edit, or adjust course programs across faculties.</p>
+                        </div>
+                        <button class="btn btn-primary" id="openAddCourseModalBtn">
+                            <i class="fa-solid fa-plus"></i> Add New Course
+                        </button>
+                    </div>
+
+                    <div class="courses-grid" id="coursesGrid">
+                        <!-- Dynamic Course Cards -->
+                    </div>
+                </section>
+
+                <!-- SECTION: ATTENDANCE -->
+                <section id="attendanceSection" class="app-section">
+                    <div class="attendance-header-cards grid-4 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue"><i class="fa-solid fa-user-clock"></i></div>
+                            <div class="stat-info">
+                                <h3>Average Attendance</h3>
+                                <p class="stat-number" id="attAvgRate">0%</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green"><i class="fa-solid fa-user-check"></i></div>
+                            <div class="stat-info">
+                                <h3>Present Today</h3>
+                                <p class="stat-number" id="attPresentToday">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red"><i class="fa-solid fa-user-xmark"></i></div>
+                            <div class="stat-info">
+                                <h3>Absent Today</h3>
+                                <p class="stat-number" id="attAbsentToday">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-purple"><i class="fa-solid fa-calendar-day"></i></div>
+                            <div class="stat-info">
+                                <h3>Selected Date</h3>
+                                <input type="date" id="attendanceDatePicker" class="form-control form-control-sm mt-1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header flex-between flex-wrap gap-1">
+                            <h2>Attendance Sheet</h2>
+                            <div class="flex-gap-2">
+                                <button class="btn btn-sm btn-outline-success" id="markAllPresentBtn"><i class="fa-solid fa-check-double"></i> Mark All Present</button>
+                                <button class="btn btn-sm btn-outline-danger" id="markAllAbsentBtn"><i class="fa-solid fa-xmark"></i> Mark All Absent</button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Student ID</th>
+                                            <th>Student Name</th>
+                                            <th>Course</th>
+                                            <th>Attendance Rate</th>
+                                            <th>Today's Status</th>
+                                            <th>Quick Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendanceTableBody">
+                                        <!-- Dynamically Populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: REPORTS -->
+                <section id="reportsSection" class="app-section">
+                    <div class="flex-between flex-wrap gap-1 mb-3">
+                        <div>
+                            <h2>System Reports & Data Export</h2>
+                            <p class="text-muted">Generate statistics summaries and download fresh dataset reports.</p>
+                        </div>
+                        <button class="btn btn-success" id="exportCsvBtn">
+                            <i class="fa-solid fa-file-csv"></i> Export Students to CSV
+                        </button>
+                    </div>
+
+                    <div class="reports-summary-grid grid-3 mb-3">
+                        <div class="card">
+                            <div class="card-header"><h2>Enrolled Status Breakdown</h2></div>
+                            <div class="card-body text-center">
+                                <canvas id="reportStatusChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h2>Gender Ratio</h2></div>
+                            <div class="card-body text-center">
+                                <canvas id="reportGenderChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h2>Executive Summary</h2></div>
+                            <div class="card-body">
+                                <ul class="report-summary-list">
+                                    <li><span>Total Enrolled:</span> <strong id="repTotalCount">0</strong></li>
+                                    <li><span>Active Rate:</span> <strong id="repActiveRatio">0%</strong></li>
+                                    <li><span>Total Programs:</span> <strong id="repCourseCount">0</strong></li>
+                                    <li><span>Overall Attendance Avg:</span> <strong id="repAttAvg">0%</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: SETTINGS -->
+                <section id="settingsSection" class="app-section">
+                    <div class="card max-w-800">
+                        <div class="card-header">
+                            <h2>Application Settings</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="settingsForm">
+                                <div class="form-group">
+                                    <label for="settingAppName">Application Name</label>
+                                    <input type="text" id="settingAppName" class="form-control" value="EduTrack Pro">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="settingAdminName">Administrator Name</label>
+                                    <input type="text" id="settingAdminName" class="form-control" value="Admin User">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Theme Preference</label>
+                                    <div class="radio-group mt-1">
+                                        <label class="radio-label">
+                                            <input type="radio" name="themeRadio" value="light" checked> Light Theme
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="themeRadio" value="dark"> Dark Theme
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Notification Preferences</label>
+                                    <div class="checkbox-group mt-1">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="notifyEmail" checked> Receive email digests
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="notifySystem" checked> Show toast alerts on CRUD actions
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Settings
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- STUDENT MODAL (ADD / EDIT) -->
+    <div class="modal-overlay" id="studentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="studentModalTitle">Add New Student</h3>
+                <button class="modal-close-btn" id="closeStudentModalBtn">&times;</button>
+            </div>
+            <form id="studentForm">
+                <div class="modal-body">
+                    <input type="hidden" id="studentEditId">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="studentName">Full Name <span class="required">*</span></label>
+                            <input type="text" id="studentName" class="form-control" placeholder="e.g. John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentEmail">Email Address <span class="required">*</span></label>
+                            <input type="email" id="studentEmail" class="form-control" placeholder="e.g. john@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentPhone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="studentPhone" class="form-control" placeholder="+1 (555) 000-0000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentGender">Gender <span class="required">*</span></label>
+                            <select id="studentGender" class="form-control" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentCourse">Course <span class="required">*</span></label>
+                            <select id="studentCourse" class="form-control" required>
+                                <option value="">Select Course</option>
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentDate">Enrollment Date <span class="required">*</span></label>
+                            <input type="date" id="studentDate" class="form-control" required>
+                        </div>
+
+                        <div class="form-group form-full">
+                            <label for="studentStatus">Status <span class="required">*</span></label>
+                            <select id="studentStatus" class="form-control" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelStudentModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveStudentBtn">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- COURSE MODAL (ADD / EDIT) -->
+    <div class="modal-overlay" id="courseModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="courseModalTitle">Add Course</h3>
+                <button class="modal-close-btn" id="closeCourseModalBtn">&times;</button>
+            </div>
+            <form id="courseForm">
+                <div class="modal-body">
+                    <input type="hidden" id="courseEditId">
+                    <div class="form-group">
+                        <label for="courseCode">Course ID/Code <span class="required">*</span></label>
+                        <input type="text" id="courseCode" class="form-control" placeholder="e.g. CS101" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseTitle">Course Name <span class="required">*</span></label>
+                        <input type="text" id="courseTitle" class="form-control" placeholder="e.g. Computer Science" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseInstructor">Instructor <span class="required">*</span></label>
+                        <input type="text" id="courseInstructor" class="form-control" placeholder="e.g. Dr. Alan Turing" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseStatus">Status</label>
+                        <select id="courseStatus" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelCourseModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-container modal-sm text-center">
+            <div class="modal-body">
+                <div class="confirm-icon warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 id="confirmTitle">Are you sure?</h3>
+                <p id="confirmMessage" class="text-muted mt-1">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer flex-center">
+                <button class="btn btn-outline" id="confirmCancelBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Script File -->
+    <script src="script.js"></script>
+</body>
+</html>
